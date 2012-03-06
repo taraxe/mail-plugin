@@ -1,18 +1,15 @@
 
 package play.modules.mail
 
-import play.api.libs.concurrent.Promise
-import java.util.Date
-import akka.actor.{Props, ActorSystem, Actor}
-import play.libs.Akka
 import play.api._
+import play.api.libs.concurrent._
+import templates.Html
+import play.libs.Akka
+import akka.actor.{Props, Actor}
 import akka.pattern.ask
 import akka.util.duration._
-import play.api.libs.concurrent._
 import org.codemonkey.simplejavamail.{MailException, Email, Mailer}
 import java.util.concurrent.Callable
-import play.api._
-import templates.Html
 import play.modules.mail.MailBuilder.Mail
 
 
