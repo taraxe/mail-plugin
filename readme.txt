@@ -1,0 +1,1 @@
+A Play 2.0 plugin providing a scala wrapper to simple-java-mail.
