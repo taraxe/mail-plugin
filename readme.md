@@ -6,7 +6,7 @@ Installation
 As a binary
 -----------
 
-Checkout the project, build it with `sbt package command.
+Checkout the project, build it with `sbt package` command.
 Put the jar available in target/scala-2.9.1 to the lib folder of your play app.
 
 As a Git submodule
