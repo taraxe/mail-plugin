@@ -3,10 +3,9 @@ import org.specs2.mutable._
 import play.api.test._
 import play.api.test.Helpers._
 import play.modules.mail._
-import play.api.libs.json._
 import org.junit.runner.RunWith
-import org.codemonkey.simplejavamail._
 import org.specs2.runner.JUnitRunner
+import play.modules.mail.MailBuilder._
 
 @RunWith(classOf[JUnitRunner])
 class MailSpec extends Specification {
@@ -19,16 +18,13 @@ class MailSpec extends Specification {
             ))) {
             import play.api.Play.current
 
-            val email = new Email();
+            val m = Mail()
+                  .from("Bibi","no-reply@bibi.com")
+                  .to(List(("Toto","toto@bibi.com",To())))
+                  .subject("A subject")
+                  .text("body")
 
-            email.setFromAddress("lollypop", "lolly.pop@somemail.com");
-            email.setSubject("hey");
-            email.addRecipient("C. Cane", "candycane@candyshop.org", RecipientType.TO);
-            email.addRecipient("C. Bo", "chocobo@candyshop.org", RecipientType.BCC);
-            email.setText("We should meet up! ;)");
-            email.setTextHTML("<img src='cid:wink1'><b>We should meet up!</b><img src='cid:wink2'>");
-
-            MailPlugin.send(email).map(r => println("Mail sent ? "+r))
+            MailPlugin.send(m).map(r => println("Mail sent ? "+r))
 
             success
          }
