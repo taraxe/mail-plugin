@@ -14,10 +14,10 @@ object MailBuilder {
       def apply():Mail = new Mail()
    }
 
-   case class Mail(_from:Option[Tuple2[String, String]] = None, _subject:Option[String] = None, _to:List[Tuple3[String, String, Recipient]] = Nil, _text:Option[String] = None, _html:Option[Html] = None) {
-      def from(f:Tuple2[String, String]):Mail = this.copy(_from = Some(f))
+   case class Mail(_from:Option[(String, String)] = None, _subject:Option[String] = None, _to:List[(String, String, Recipient)] = Nil, _text:Option[String] = None, _html:Option[Html] = None) {
+      def from(f:(String, String)):Mail = this.copy(_from = Some(f))
       def subject(s:String):Mail = this.copy(_subject = Some(s))
-      def to(t:List[Tuple3[String, String, Recipient]]):Mail = this.copy(_to = t)
+      def to(t:List[(String, String, Recipient)]):Mail = this.copy(_to = t)
       def text(t:String):Mail = this.copy(_text = Some(t))
       def html(h:Html):Mail = this.copy(_html = Some(h))
 

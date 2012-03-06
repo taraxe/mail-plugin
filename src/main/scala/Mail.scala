@@ -62,8 +62,6 @@ object MailPlugin {
    }
 }
 
-
-
 private[mail] case class MailHelper(host:String=MailPlugin.DEFAULT_HOST, port:Int=MailPlugin.DEFAULT_PORT, username:String ="", password:String ="") {
    def mailer = new Mailer(host, port, username, password)
 }
