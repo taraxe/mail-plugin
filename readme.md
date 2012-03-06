@@ -44,6 +44,7 @@ Then in your controller, you can do :
 
 Configuration
 =============
+In application.conf :
 
         #put this setting in you want to mock the mail server in development
         mail.smtp=dev
