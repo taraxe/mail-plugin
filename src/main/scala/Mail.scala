@@ -1,16 +1,18 @@
-
 package play.modules.mail
 
-import play.api._
-import play.api.libs.concurrent._
-import templates.Html
-import play.libs.Akka
-import akka.actor.{Props, Actor}
-import akka.pattern.ask
-import akka.util.duration._
-import org.codemonkey.simplejavamail.{MailException, Email, Mailer}
-import java.util.concurrent.Callable
 import play.modules.mail.MailBuilder.Mail
+
+import play.api.{Logger, Plugin, Application, PlayException}
+import play.api.libs.concurrent.{akkaToPlay, Promise}
+
+import play.libs.Akka
+
+import akka.pattern.ask
+import akka.util.Duration
+import akka.util.Timeout
+
+import org.codemonkey.simplejavamail.{Email, Mailer}
+import java.util.concurrent.Callable
 
 
 /**
@@ -50,7 +52,7 @@ object MailPlugin {
    private def sendMessage(msg:Email)(implicit  app:Application):Promise[Boolean] = {
       val mailer = helper.mailer
       import akka.util.Timeout
-      implicit val timeout = Timeout(5 second)
+      implicit val timeout = Timeout(Duration(5, "seconds"))
       (MailWorker.ref ? (msg,mailer)).mapTo[Boolean].asPromise
    }
    
@@ -58,60 +60,6 @@ object MailPlugin {
       case Some(plugin) => plugin.helper
       case _ => throw PlayException("MailPugin Error", "The MailPlugin is not initialized, Please edit your conf/play.plugins file and add the following line: '400:play.modules.mailb.MailPlugin' (400 is an arbitrary priority and may be changed to match your needs).")
    }
-}
-
-object MailBuilder {
-
-
-   import javax.mail.Message.RecipientType
-   sealed case class Recipient(t:RecipientType)
-   case class To() extends Recipient(RecipientType.TO)
-   case class Bcc() extends Recipient(RecipientType.BCC)
-   case class CC() extends Recipient(RecipientType.CC)
-
-   object Mail {
-      def apply() = new Mail()
-   }
-
-   case class Mail(_from:Option[(String, String)] = None, _subject:Option[String] = None, _to:List[(String, String, Recipient)] = Nil, _text:Option[String] = None, _html:Option[Html] = None) {
-      def from(f:(String, String)):Mail = this.copy(_from = Some(f))
-      def subject(s:String):Mail = this.copy(_subject = Some(s))
-      def to(t:List[(String, String, Recipient)]):Mail = this.copy(_to = t)
-      def text(t:String):Mail = this.copy(_text = Some(t))
-      def html(h:Html):Mail = this.copy(_html = Some(h))
-
-      def toEmail:Email = {
-         val email = new Email();
-         this._from.map(f => email.setFromAddress(f._1,f._2))
-         this._subject.map(s => email.setSubject(s))
-         this._to.foreach(t => email.addRecipient(t._1,t._2,t._3.t))
-         this._text.map(s => email.setText(s))
-         this._html.map(h => email.setTextHTML(h.toString))
-
-         email
-      }
-   }
-}
-
-class MailWorker extends Actor {
-   def receive = {
-      case (email:Email,mailer:Mailer) => {
-         try {
-            mailer.sendMail(email)
-            Logger.info("MailPlugin: email sent")
-            sender ! true
-         } catch {
-            case e:MailException => {
-               Logger.error("MailPlugin error:"+e.getMessage)
-               sender ! false
-            }
-         }
-      }
-   }
-}
-
-object MailWorker {
-   val ref = Akka.system.actorOf(Props[MailWorker])
 }
 
 private[mail] case class MailHelper(host:String=MailPlugin.DEFAULT_HOST, port:Int=MailPlugin.DEFAULT_PORT, username:String ="", password:String ="") {
