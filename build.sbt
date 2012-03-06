@@ -1,4 +1,4 @@
-name := "Play 2.0 Mail Plugin"
+name := "play2-mail-plugin"
 
 organization := "play.modules.mail"
 
