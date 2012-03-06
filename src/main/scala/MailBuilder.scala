@@ -2,6 +2,7 @@ package play.modules.mail
 
 import play.api.templates.Html
 
+import org.codemonkey.simplejavamail.Email
 
 object MailBuilder {
    import javax.mail.Message.RecipientType
