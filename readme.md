@@ -42,3 +42,16 @@ Then in your controller, you can do :
             Ok("It works")
         }
 
+Configuration
+=============
+
+#put this setting in you want to mock the mail server in development
+mail.smtp=dev
+
+#smtp server settings
+smtp.host=smtp.server.com
+smtp.port=25
+smtp.username=
+smtp.password=
+
+
