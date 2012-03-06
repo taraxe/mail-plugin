@@ -6,13 +6,14 @@ Installation
 As a binary
 -----------
 
-Checkout the project, build it with "sbt package" command.
+Checkout the project, build it with `sbt package command.
 Put the jar available in target/scala-2.9.1 to the lib folder of your play app.
 
 As a Git submodule
 ------------------
 You can add it as a submodule of your play project.
-Checkout the project in modules/mail-plugin.
+Checkout the project in modules/mail-plugin, then do `git submodule init`
+
 In your project Build.scala add the dependency to the plugin :
 
         val mailPlugin = Project("mailPlugin", file("modules/mail-plugin"))
@@ -24,7 +25,7 @@ Usage
 =====
 
 Add a play.plugins file in your conf directory with :
-400:play.modules.mail.MailPlugin
+        400:play.modules.mail.MailPlugin
 
 Then in your controller, you can do :
 
