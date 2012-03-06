@@ -6,7 +6,7 @@ Installation
 As a binary
 -----------
 
-Checkout the project, build it with `sbt package` command.
+Checkout the project, build it with `sbt package command.
 Put the jar available in target/scala-2.9.1 to the lib folder of your play app.
 
 As a Git submodule
@@ -45,13 +45,13 @@ Then in your controller, you can do :
 Configuration
 =============
 
-#put this setting in you want to mock the mail server in development
-mail.smtp=dev
+        #put this setting in you want to mock the mail server in development
+        mail.smtp=dev
 
-#smtp server settings
-smtp.host=smtp.server.com
-smtp.port=25
-smtp.username=
-smtp.password=
+        #smtp server settings
+        smtp.host=smtp.server.com
+        smtp.port=25
+        smtp.username=
+        smtp.password=
 
 
