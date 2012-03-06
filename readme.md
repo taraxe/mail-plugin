@@ -6,7 +6,7 @@ Installation
 As a binary
 -----------
 
-Checkout the project, build it from the sources with `sbt package command.
+Checkout the project, build it from the sources with `sbt package` command.
 Put the jar available in target/scala-2.9.1 to the lib folder of your play app.
 
 As a Git submodule
@@ -31,6 +31,7 @@ Then in your controller, you can do :
 
         import play.modules.mail._
         import play.modules.mail.MailBuilder._
+        import play.api.Play.current
 
         def sendMail = Action { request =>
             val m = Mail()
