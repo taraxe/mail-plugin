@@ -6,13 +6,13 @@ Installation
 As a binary
 -----------
 
-Checkout the project, build it with `sbt package command.
+Checkout the project, build it from the sources with `sbt package command.
 Put the jar available in target/scala-2.9.1 to the lib folder of your play app.
 
 As a Git submodule
 ------------------
 You can add it as a submodule of your play project.
-Checkout the project in modules/mail-plugin, then do `git submodule init`
+Checkout the project in modules/mail-plugin, then do `git submodule add`
 
 In your project Build.scala add the dependency to the plugin :
 
