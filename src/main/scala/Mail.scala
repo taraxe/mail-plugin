@@ -1,6 +1,5 @@
 package play.modules.mail
 
-import play.modules.mail.MailBuilder.Mail
 
 import play.api.{Logger, Plugin, Application, PlayException}
 import play.api.libs.concurrent.{akkaToPlay, Promise}
@@ -9,10 +8,13 @@ import play.libs.Akka
 
 import akka.pattern.ask
 import akka.util.Duration
-import akka.util.Timeout
 
-import org.codemonkey.simplejavamail.{Email, Mailer}
 import java.util.concurrent.Callable
+import org.codemonkey.simplejavamail.{MailException, Email, Mailer}
+import akka.actor.{Props, Actor}
+import play.modules.mail.MailBuilder.Mail
+import play.modules.mail.MailWorker.Start
+import play.api.templates.Html
 
 
 /**
@@ -32,6 +34,7 @@ class MailPlugin(app:Application) extends Plugin {
 
    override def onStart() {
       Logger.info("Mail plugin starting...")
+      MailWorker.ref ! Start(helper.mailer)
       Logger.info("Mail plugin successfully started with smtp server on %s:%s".format(helper.host, helper.port))
    }
 }
@@ -50,10 +53,9 @@ object MailPlugin {
    }
 
    private def sendMessage(msg:Email)(implicit  app:Application):Promise[Boolean] = {
-      val mailer = helper.mailer
       import akka.util.Timeout
       implicit val timeout = Timeout(Duration(5, "seconds"))
-      (MailWorker.ref ? (msg,mailer)).mapTo[Boolean].asPromise
+      (MailWorker.ref ? (msg)).mapTo[Boolean].asPromise
    }
    
    private def helper(implicit app:Application):MailHelper = app.plugin[MailPlugin] match {
