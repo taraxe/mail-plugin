@@ -18,7 +18,7 @@ class MailWorker extends Actor {
    var mailer:Mailer = null
    def receive = {
       case Start(mailer:Mailer) => this.mailer = mailer
-      case (email:Email) => {
+      case email:Email => {
          try {
             mailer.sendMail(email)
             Logger.info("MailPlugin: email sent")

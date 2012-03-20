@@ -55,7 +55,7 @@ object MailPlugin {
    private def sendMessage(msg:Email)(implicit  app:Application):Promise[Boolean] = {
       import akka.util.Timeout
       implicit val timeout = Timeout(Duration(5, "seconds"))
-      (MailWorker.ref ? (msg)).mapTo[Boolean].asPromise
+      (MailWorker.ref ? (msg)).mapTo[Boolean].asPromise   //FIX-ME, switch to a fire and forget mode
    }
    
    private def helper(implicit app:Application):MailHelper = app.plugin[MailPlugin] match {
