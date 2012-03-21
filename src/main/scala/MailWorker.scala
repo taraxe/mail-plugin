@@ -1,12 +1,11 @@
 package play.modules.mail
 
 import play.api.Logger
-import play.libs.Akka
-
+import play.api.libs.concurrent._
 import akka.actor.{Actor, Props}
-
 import org.codemonkey.simplejavamail.{MailException, Email, Mailer}
 import play.modules.mail.MailWorker.Start
+import play.api.Play.current
 
 object MailWorker {
    sealed trait Event
@@ -25,7 +24,7 @@ class MailWorker extends Actor {
             sender ! true
          } catch {
             case e:MailException => {
-               Logger.error("MailPlugin error:"+e.getMessage)
+               Logger.error("MailPlugin:"+e.getMessage)
                sender ! false
             }
          }
