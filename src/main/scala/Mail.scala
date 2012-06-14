@@ -26,17 +26,18 @@ class MailPlugin(app:Application) extends Plugin {
     app.configuration.getString("smtp.username").getOrElse(""),
     app.configuration.getString("smtp.password").getOrElse("")
   )
-
-   override def onStart() {
-      Logger.info("Mail plugin starting...")
-      MailWorker.ref ! Start(helper.mailer)
-      Logger.info("Mail plugin successfully started with smtp server on %s:%s".format(helper.host, helper.port))
-   }
 }
 
 object MailPlugin {
    private[mail] val DEFAULT_HOST = "localhost"
    private[mail] val DEFAULT_PORT = 25
+
+  lazy val worker = {
+    Logger.info("Mail plugin starting...")
+    MailWorker.ref ! Start(helper.mailer)
+    Logger.info("Mail plugin successfully started with smtp server on %s:%s".format(helper.host, helper.port))
+    MailWorker.ref
+  }
 
    def send(email:Mail)(implicit app:Application):Promise[Boolean] = {
       app.configuration.getString("mail.smtp") match {
@@ -50,7 +51,7 @@ object MailPlugin {
    private def sendMessage(msg:Email)(implicit  app:Application):Promise[Boolean] = {
       import akka.util.Timeout
       implicit val timeout = Timeout(Duration(5, "seconds"))
-      (MailWorker.ref ? (msg)).mapTo[Boolean].asPromise   //FIX-ME, switch to fire and forget
+      (worker ? (msg)).mapTo[Boolean].asPromise   //FIX-ME, switch to fire and forget
    }
    
    private def helper(implicit app:Application):MailHelper = app.plugin[MailPlugin] match {
